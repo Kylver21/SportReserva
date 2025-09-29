@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { CreditCard, Calendar, Clock, MapPin, Check } from 'lucide-react';
+import { PAYMENT_METHODS } from '../../data/mockData';
 
 export default function Checkout() {
   const { state, dispatch } = useApp();
@@ -144,7 +145,7 @@ export default function Checkout() {
                     />
                     <div className="flex items-center space-x-2">
                       <img
-                        src="/src/img/paypal-logo.png"
+                        src={PAYMENT_METHODS.PAYPAL.logo}
                         alt="Logo de PayPal"
                         className="w-6 h-6 object-contain"
                       />
@@ -161,7 +162,7 @@ export default function Checkout() {
                     />
                     <div className="flex items-center space-x-2">
                       <img
-                        src="/src/img/logo-yape.png"
+                        src={PAYMENT_METHODS.YAPE.logo}
                         alt="Logo de Yape"
                         className="w-6 h-6 object-contain"
                       />
@@ -258,14 +259,14 @@ export default function Checkout() {
                   <h3 className="text-lg font-semibold mb-4">Pago con Yape</h3>
                   <div className="flex justify-center">
                     <img
-                      src="/src/img/yapeVale.jpg"
+                      src={PAYMENT_METHODS.YAPE.qr}
                       alt="QR de Yape"
                       className="w-32 h-32 md:w-40 md:h-40 object-contain"
                     />
                   </div>
                   <div className="flex justify-center mt-4">
                     <img
-                      src="/src/img/logo-yape.png"
+                      src={PAYMENT_METHODS.YAPE.logo}
                       alt="Logo de Yape"
                       className="w-16 h-16 object-contain"
                     />

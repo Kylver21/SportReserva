@@ -72,9 +72,10 @@ export interface Availability {
 
 export interface PaymentMethod {
   id: string;
-  tipo: 'tarjeta' | 'paypal' | 'efectivo';
+  tipo: 'tarjeta' | 'paypal' | 'efectivo' | 'yape';
   nombre: string;
   detalles: string;
+  logo?: string;
 }
 
 export interface FAQ {
