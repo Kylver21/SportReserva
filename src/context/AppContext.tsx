@@ -150,15 +150,31 @@ function appReducer(state: AppState, action: AppAction): AppState {
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [state, dispatch] = useReducer(appReducer, initialState);
 
-  // Simular persistencia en localStorage
+  // Cargar estado persistido al inicializar
   useEffect(() => {
+    // Cargar usuario autenticado
     const savedUser = localStorage.getItem('currentUser');
     if (savedUser) {
       const user = JSON.parse(savedUser);
       dispatch({ type: 'LOGIN', payload: user });
     }
+
+    // Cargar reservas del usuario
+    const savedBookings = localStorage.getItem('userBookings');
+    if (savedBookings) {
+      const bookings = JSON.parse(savedBookings);
+      dispatch({ type: 'LOAD_BOOKINGS', payload: bookings });
+    }
+
+    // Cargar notificaciones
+    const savedNotifications = localStorage.getItem('notifications');
+    if (savedNotifications) {
+      const notifications = JSON.parse(savedNotifications);
+      dispatch({ type: 'LOAD_NOTIFICATIONS', payload: notifications });
+    }
   }, []);
 
+  // Persistir usuario autenticado
   useEffect(() => {
     if (state.currentUser) {
       localStorage.setItem('currentUser', JSON.stringify(state.currentUser));
@@ -166,6 +182,18 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem('currentUser');
     }
   }, [state.currentUser]);
+
+  // Persistir reservas del usuario
+  useEffect(() => {
+    if (state.userBookings.length > 0) {
+      localStorage.setItem('userBookings', JSON.stringify(state.userBookings));
+    }
+  }, [state.userBookings]);
+
+  // Persistir notificaciones
+  useEffect(() => {
+    localStorage.setItem('notifications', JSON.stringify(state.notifications));
+  }, [state.notifications]);
 
   return (
     <AppContext.Provider value={{ state, dispatch }}>

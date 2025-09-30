@@ -1,24 +1,18 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Menu, X, User, LogOut } from 'lucide-react';
 import { useApp } from '../../context/AppContext';
-import { Bell, User, LogOut, Menu, X } from 'lucide-react';
+import EnhancedNotificationBell from './EnhancedNotificationBell';
 
 export default function Header() {
   const { state, dispatch } = useApp();
   const location = useLocation();
   const navigate = useNavigate();
-  const [showNotifications, setShowNotifications] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     dispatch({ type: 'LOGOUT' });
     navigate('/');
-  };
-
-  const unreadNotifications = state.notifications.filter(n => !n.read);
-
-  const handleNotificationClick = (id: string) => {
-    dispatch({ type: 'MARK_NOTIFICATION_READ', payload: id });
   };
 
   const navigationLinks = [
@@ -63,42 +57,7 @@ export default function Header() {
             {state.isAuthenticated ? (
               <>
                 {/* Notifications */}
-                <div className="relative">
-                  <button
-                    onClick={() => setShowNotifications(!showNotifications)}
-                    className="p-2 text-gray-600 hover:text-green-600 relative"
-                  >
-                    <Bell className="w-6 h-6" />
-                    {unreadNotifications.length > 0 && (
-                      <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                        {unreadNotifications.length}
-                      </span>
-                    )}
-                  </button>
-
-                  {showNotifications && (
-                    <div className="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border z-50">
-                      <div className="p-4 border-b">
-                        <h3 className="text-lg font-semibold">Notificaciones</h3>
-                      </div>
-                      <div className="max-h-80 overflow-y-auto">
-                        {state.notifications.slice(0, 5).map((notification) => (
-                          <div
-                            key={notification.id}
-                            className={`p-4 border-b hover:bg-gray-50 ${
-                              !notification.read ? 'bg-blue-50' : ''
-                            }`}
-                            onClick={() => handleNotificationClick(notification.id)}
-                          >
-                            <h4 className="font-medium text-sm">{notification.title}</h4>
-                            <p className="text-gray-600 text-xs mt-1">{notification.message}</p>
-                            <span className="text-xs text-gray-400 mt-1">{notification.date}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                <EnhancedNotificationBell />
 
                 {/* User Menu */}
                 <div className="flex items-center space-x-2">

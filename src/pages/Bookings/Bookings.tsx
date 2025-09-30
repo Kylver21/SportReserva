@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { Calendar, Clock, MapPin, DollarSign, Filter, CheckCircle, XCircle } from 'lucide-react';
 
 export default function Bookings() {
   const { state, dispatch } = useApp();
+  const navigate = useNavigate();
   const [filter, setFilter] = useState<'todas' | 'activa' | 'completada' | 'cancelada'>('todas');
 
   if (!state.isAuthenticated) {
@@ -176,14 +178,14 @@ export default function Bookings() {
                           )}
                           {booking.estado === 'completada' && (
                             <button
-                              onClick={() => window.location.href = `/courts/${booking.cancha_id}`}
+                              onClick={() => navigate(`/courts/${booking.cancha_id}`)}
                               className="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors text-sm font-medium"
                             >
                               Reservar de Nuevo
                             </button>
                           )}
                           <button
-                            onClick={() => window.location.href = `/booking-details/${booking.id}`}
+                            onClick={() => navigate(`/booking-details/${booking.id}`)}
                             className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors text-sm font-medium"
                           >
                             Ver Detalles
@@ -232,7 +234,7 @@ export default function Bookings() {
             </p>
             {filter === 'todas' && (
               <button
-                onClick={() => window.location.href = '/courts'}
+                onClick={() => navigate('/courts')}
                 className="bg-green-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors"
               >
                 Explorar Canchas

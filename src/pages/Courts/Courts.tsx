@@ -2,18 +2,22 @@ import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { Search, Filter, MapPin, Star, DollarSign } from 'lucide-react';
+import CategoryFilter from '../../components/common/CategoryFilter';
+import { Court } from '../../types';
 
 export default function Courts() {
   const { state, dispatch } = useApp();
   const [searchTerm, setSearchTerm] = useState('');
   const [showFilters, setShowFilters] = useState(false);
+  const [categorizedCourts, setCategorizedCourts] = useState<Court[]>(state.courts);
+  const [activeCategory, setActiveCategory] = useState('todos');
 
   const deportes = [...new Set(state.courts.map(court => court.deporte))];
   const ubicaciones = [...new Set(state.courts.map(court => court.ubicacion))];
   const tamaños = [...new Set(state.courts.map(court => court.tamaño))];
 
   const filteredCourts = useMemo(() => {
-    return state.courts.filter(court => {
+    return categorizedCourts.filter(court => {
       const matchesSearch = court.nombre.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           court.deporte.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           court.ubicacion.toLowerCase().includes(searchTerm.toLowerCase());
@@ -25,7 +29,12 @@ export default function Courts() {
 
       return matchesSearch && matchesDeporte && matchesUbicacion && matchesTamaño && matchesPrecio;
     });
-  }, [state.courts, state.searchFilters, searchTerm]);
+  }, [categorizedCourts, state.searchFilters, searchTerm]);
+
+  const handleCategoryFilter = (filteredCourts: Court[], category: string) => {
+    setCategorizedCourts(filteredCourts);
+    setActiveCategory(category);
+  };
 
   const updateFilter = (filterName: string, value: string | number) => {
     dispatch({
@@ -45,6 +54,8 @@ export default function Courts() {
       }
     });
     setSearchTerm('');
+    setCategorizedCourts(state.courts);
+    setActiveCategory('todos');
   };
 
   return (
@@ -59,6 +70,13 @@ export default function Courts() {
             Descubre y reserva las mejores canchas deportivas en tu área
           </p>
         </div>
+
+        {/* Filtro de Categorías */}
+        <CategoryFilter 
+          courts={state.courts}
+          onFilterChange={handleCategoryFilter}
+          className="mb-8"
+        />
 
         {/* Search and Filters */}
         <div className="bg-white rounded-xl shadow-md p-6 mb-8">
@@ -170,9 +188,16 @@ export default function Courts() {
 
         {/* Results */}
         <div className="flex justify-between items-center mb-6">
-          <p className="text-gray-600">
-            {filteredCourts.length} canchas encontradas
-          </p>
+          <div>
+            <p className="text-gray-600">
+              {filteredCourts.length} cancha{filteredCourts.length !== 1 ? 's' : ''} encontrada{filteredCourts.length !== 1 ? 's' : ''}
+            </p>
+            {activeCategory !== 'todos' && (
+              <p className="text-sm text-green-600 font-medium">
+                Categoría: {activeCategory.charAt(0).toUpperCase() + activeCategory.slice(1)}
+              </p>
+            )}
+          </div>
         </div>
 
         {/* Courts Grid */}

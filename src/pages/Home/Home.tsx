@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useApp } from '../../context/AppContext';
 import { MapPin, Star, Clock, Users } from 'lucide-react';
+import Carousel from '../../components/common/Carousel';
+import PromotionCard from '../../components/common/PromotionCard';
 
 export default function Home() {
   const { state } = useApp();
@@ -39,38 +41,44 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Promociones */}
+      {/* Promociones - Carrusel */}
       {activePromotions.length > 0 && (
-        <section className="py-16 bg-orange-50">
+        <section className="py-16 bg-gradient-to-r from-orange-50 to-red-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h2 className="text-3xl font-bold text-center mb-12 text-gray-900">
-              Ofertas Especiales
-            </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {activePromotions.map((promotion) => (
-                <div
-                  key={promotion.id}
-                  className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow"
-                >
-                  <img
-                    src={promotion.imagen}
-                    alt={promotion.titulo}
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-2">{promotion.titulo}</h3>
-                    <p className="text-gray-600 mb-4">{promotion.descripcion}</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-2xl font-bold text-orange-600">
-                        {promotion.descuento}% OFF
-                      </span>
-                      <div className="text-sm text-gray-500">
-                        Código: <span className="font-mono font-bold">{promotion.codigo}</span>
-                      </div>
-                    </div>
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                🔥 Ofertas Especiales
+              </h2>
+              <p className="text-lg text-gray-600">
+                Aprovecha estas promociones exclusivas por tiempo limitado
+              </p>
+            </div>
+            
+            <div className="max-w-4xl mx-auto">
+              <Carousel 
+                autoSlide={true} 
+                slideInterval={5000}
+                showDots={true}
+                showArrows={true}
+              >
+                {activePromotions.map((promotion) => (
+                  <div key={promotion.id} className="px-4">
+                    <PromotionCard promotion={promotion} />
                   </div>
-                </div>
-              ))}
+                ))}
+              </Carousel>
+            </div>
+            
+            <div className="text-center mt-8">
+              <p className="text-sm text-gray-500 mb-4">
+                Desliza para ver más ofertas o usa los códigos en tu próxima reserva
+              </p>
+              <Link
+                to="/courts"
+                className="inline-flex items-center px-6 py-3 bg-orange-600 text-white rounded-lg font-semibold hover:bg-orange-700 transition-colors shadow-lg"
+              >
+                Explorar Canchas con Ofertas
+              </Link>
             </div>
           </div>
         </section>
